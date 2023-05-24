@@ -24,18 +24,11 @@ const fetchCAR = async (url) => {
   const res = await fetch(url)
   stats.status = res.status
   if (res.ok) {
-    const reader = res.body.getReader()
-    while (true) {
-      const { done, value } = await reader.read()
+    for await (const value of res.body) {
       if (stats.firstByte === null) {
         stats.firstByte = new Date()
       }
-      if (value) {
-        stats.byteLength += value.byteLength
-      }
-      if (done) {
-        break
-      }
+      stats.byteLength += value.byteLength
     }
   }
   stats.end = new Date()
