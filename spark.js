@@ -15,10 +15,12 @@ const fetchCAR = async (url) => {
     start: new Date(),
     firstByte: null,
     end: null,
-    byteLength: 0
+    byteLength: 0,
+    status: null
   }
   console.log('Fetching CAR...')
   const res = await fetch(url)
+  stats.status = res.status
   const reader = res.body.getReader()
   while (true) {
     const { done, value } = await reader.read()
