@@ -85,6 +85,7 @@ while (true) {
     await submitRetrieval({ id: retrieval.id, success })
     Zinnia.jobCompleted()
   } catch (err) {
+    Zinnia.activity.error('SPARK failed reporting retrieval')
     console.error(err)
   }
 
