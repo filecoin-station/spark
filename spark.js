@@ -1,5 +1,7 @@
 import { assertEquals } from 'zinnia:assert'
 
+// TODO: Add timeout
+
 const getRetrieval = async () => {
   console.log('Geting retrieval...')
   const res = await fetch('https://spark.fly.dev/retrievals', {
@@ -21,17 +23,19 @@ const fetchCAR = async (url) => {
   console.log('Fetching CAR...')
   const res = await fetch(url)
   stats.status = res.status
-  const reader = res.body.getReader()
-  while (true) {
-    const { done, value } = await reader.read()
-    if (stats.firstByte === null) {
-      stats.firstByte = new Date()
-    }
-    if (value) {
-      stats.byteLength += value.byteLength
-    }
-    if (done) {
-      break
+  if (res.ok) {
+    const reader = res.body.getReader()
+    while (true) {
+      const { done, value } = await reader.read()
+      if (stats.firstByte === null) {
+        stats.firstByte = new Date()
+      }
+      if (value) {
+        stats.byteLength += value.byteLength
+      }
+      if (done) {
+        break
+      }
     }
   }
   stats.end = new Date()
