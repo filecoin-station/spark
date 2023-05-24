@@ -21,14 +21,32 @@ const fetchCAR = async (url) => {
     status: null
   }
   console.log('Fetching CAR...')
-  const res = await fetch(url)
+  const controller = new AbortController()
+  const { signal } = controller
+  const res = await fetch(url, { signal })
   stats.status = res.status
+
   if (res.ok) {
-    for await (const value of res.body) {
-      if (stats.firstByte === null) {
-        stats.firstByte = new Date()
+    // Abort if no data is received for 10 seconds
+    let timeout
+    const startTimeout = () => {
+      if (timeout) {
+        clearTimeout(timeout)
       }
-      stats.byteLength += value.byteLength
+      timeout = setTimeout(() => controller.abort(), 10_000)
+    }
+    startTimeout()
+
+    try {
+      for await (const value of res.body) {
+        if (stats.firstByte === null) {
+          stats.firstByte = new Date()
+        }
+        stats.byteLength += value.byteLength
+        startTimeout()
+      }
+    } finally {
+      clearTimeout(timeout)
     }
   }
   stats.end = new Date()
