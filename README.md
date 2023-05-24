@@ -9,5 +9,5 @@ SP Retrieval Checker Module
 Install [Zinnia CLI](https://github.com/filecoin-station/zinnia).
 
 ```bash
-$ zinnia run spark.js
+$ zinnia run module.js
 ```
