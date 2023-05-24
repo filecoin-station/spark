@@ -20,23 +20,25 @@ const submitRetrieval = async ({ success }) => {
       'Content-Type': 'application/json'
     }
   })
-  assertEquals(res.status, 200)
-  assertEquals(await res.text(), 'OK')
+  assertEquals(res.status, 200, await res.text().catch(() => ''))
 }
 
+console.log('Geting retrieval...')
 const retrieval = await getRetrieval()
 console.log({ retrieval })
 
 let success = true
 const url = `https://strn.pl/ipfs/${retrieval.cid}`
 try {
-  await fetchCAR(url)
+  console.log('Fetching CAR...')
+  const car = await fetchCAR(url)
+  console.log(`Downloaded ${car.byteLength} bytes`)
 } catch (err) {
   console.error(`Failed to fetch ${url}`)
   console.error(err)
   success = false
 }
-console.log({ success })
 
+console.log('Submitting retrieval...')
 await submitRetrieval({ success })
-console.log('submitted')
+console.log('Retrieval submitted')
