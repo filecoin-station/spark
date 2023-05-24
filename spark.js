@@ -7,15 +7,35 @@ const getRetrieval = async () => {
   return res.json()
 }
 
-const fetchCAR = async (cid) => {
-  assert(cid)
-  const url = `https://strn.pl/ipfs/${cid}`
-  console.log('fetching', url)
+const fetchCAR = async (url) => {
   const res = await fetch(url)
   return res.arrayBuffer()
 }
 
+const submitRetrieval = async ({ success }) => {
+  const res = await fetch(`https://spark.fly.dev/retrievals/${retrieval.id}`, {
+    method: 'POST',
+    body: JSON.stringify({ success }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  assert(res.ok)
+}
+
 const retrieval = await getRetrieval()
 console.log({ retrieval })
-const car = await fetchCAR(retrieval.cid)
-console.log('got CAR')
+
+let success = true
+const url = `https://strn.pl/ipfs/${retrieval.cid}`
+try {
+  await fetchCAR(url)
+} catch (err) {
+  console.error(`Failed to fetch ${url}`)
+  console.error(err)
+  success = false
+}
+console.log({ success })
+
+await submitRetrieval({ success })
+console.log('submitted')
