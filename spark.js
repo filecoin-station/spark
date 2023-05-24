@@ -48,6 +48,7 @@ while (true) {
     }
 
     await submitRetrieval({ id: retrieval.id, success })
+    Zinnia.jobCompleted()
   } catch (err) {
     console.error(err)
   }
