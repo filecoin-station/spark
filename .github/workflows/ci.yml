@@ -1,0 +1,11 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          curl -L https://github.com/filecoin-station/zinnia/releases/download/v0.10.0/zinnia-linux-x64.tar.gz > zinnia.tar.gz
+          tar -xzvf zinnia.tar.gz
+      - run: ./zinnia run test.js
