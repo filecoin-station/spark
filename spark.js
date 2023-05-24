@@ -11,11 +11,29 @@ const getRetrieval = async () => {
 }
 
 const fetchCAR = async (url) => {
+  const stats = {
+    start: new Date(),
+    firstByte: null,
+    end: null,
+    byteLength: 0
+  }
   console.log('Fetching CAR...')
   const res = await fetch(url)
-  const car = await res.arrayBuffer()
-  console.log(`Downloaded ${car.byteLength} bytes`)
-  return car
+  const reader = res.body.getReader()
+  while (true) {
+    const { done, value } = await reader.read()
+    if (stats.firstByte === null) {
+      stats.firstByte = new Date()
+    }
+    if (value) {
+      stats.byteLength += value.byteLength
+    }
+    if (done) {
+      break
+    }
+  }
+  stats.end = new Date()
+  console.log(stats)
 }
 
 const submitRetrieval = async ({ id, success }) => {
