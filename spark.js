@@ -1,4 +1,4 @@
-import { assert } from 'zinnia:assert'
+import { assertEquals } from 'zinnia:assert'
 
 const getRetrieval = async () => {
   const res = await fetch('https://spark.fly.dev/retrievals', {
@@ -14,13 +14,14 @@ const fetchCAR = async (url) => {
 
 const submitRetrieval = async ({ success }) => {
   const res = await fetch(`https://spark.fly.dev/retrievals/${retrieval.id}`, {
-    method: 'POST',
+    method: 'PATCH',
     body: JSON.stringify({ success }),
     headers: {
       'Content-Type': 'application/json'
     }
   })
-  assert(res.ok)
+  assertEquals(res.status, 200)
+  assertEquals(await res.text(), 'OK')
 }
 
 const retrieval = await getRetrieval()
