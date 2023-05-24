@@ -31,18 +31,26 @@ const submitRetrieval = async ({ id, success }) => {
   console.log('Retrieval submitted')
 }
 
-while (true) {
-  const retrieval = await getRetrieval()
+const sleep = dt => new Promise(resolve => setTimeout(resolve, dt))
 
-  let success = true
-  const url = `https://strn.pl/ipfs/${retrieval.cid}`
+while (true) {
   try {
-    await fetchCAR(url)
+    const retrieval = await getRetrieval()
+
+    let success = false
+    const url = `https://strn.pl/ipfs/${retrieval.cid}`
+    try {
+      await fetchCAR(url)
+      success = true
+    } catch (err) {
+      console.error(`Failed to fetch ${url}`)
+      console.error(err)
+    }
+
+    await submitRetrieval({ id: retrieval.id, success })
   } catch (err) {
-    console.error(`Failed to fetch ${url}`)
     console.error(err)
-    success = false
   }
 
-  await submitRetrieval({ id: retrieval.id, success })
+  await sleep(1_000)
 }
