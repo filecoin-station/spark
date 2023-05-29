@@ -10,5 +10,5 @@ Install [Zinnia CLI](https://github.com/filecoin-station/zinnia).
 
 ```bash
 $ zinnia run module.js
-$ zinnia run test.js
+$ zinnia run test/all.js
 ```
