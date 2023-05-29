@@ -1,6 +1,6 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assertEquals } from 'zinnia:assert'
+import { assertInstanceOf, assertEquals } from 'zinnia:assert'
 
 test('getRetrieval', async () => {
   const retrieval = { retrieval: 'retrieval' }
@@ -49,7 +49,12 @@ test('fetchCAR', async () => {
     }
   }
   const spark = new Spark({ fetch })
-  await spark.fetchCAR(URL)
+  const stats = await spark.fetchCAR(URL)
+  assertInstanceOf(stats.start, Date)
+  assertInstanceOf(stats.firstByte, Date)
+  assertInstanceOf(stats.end, Date)
+  assertEquals(stats.byteLength, 3)
+  assertEquals(stats.status, 200)
 })
 
 test('submitRetrieval', async () => {
