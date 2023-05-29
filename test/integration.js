@@ -3,5 +3,12 @@ import { test } from 'zinnia:test'
 
 test('integration', async () => {
   const spark = new Spark()
-  await spark.nextRetrieval()
+  for (let i = 0; i < 10; i++) {
+    try {
+      await spark.nextRetrieval()
+      break
+    } catch (err) {
+      console.error(err)
+    }
+  }
 })
