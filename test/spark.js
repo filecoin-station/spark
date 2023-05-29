@@ -17,6 +17,40 @@ test('getRetrieval', async () => {
   assertEquals(await spark.getRetrieval(), retrieval)
 })
 
+test('fetchCAR', async () => {
+  const URL = 'url'
+  const fetch = async url => {
+    assertEquals(url, URL)
+    return {
+      status: 200,
+      ok: true,
+      body: {
+        [Symbol.asyncIterator]: () => {
+          let i = 0
+          return {
+            async next () {
+              if (i === 0) {
+                i++
+                return {
+                  value: new Uint8Array([1, 2, 3]),
+                  done: false
+                }
+              } else {
+                return {
+                  value: undefined,
+                  done: true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  const spark = new Spark({ fetch })
+  await spark.fetchCAR(URL)
+})
+
 test('submitRetrieval', async () => {
   const fetch = async (url, opts) => {
     assertEquals(url, 'https://spark.fly.dev/retrievals/0')
