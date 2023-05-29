@@ -17,6 +17,7 @@ test('getRetrieval', async () => {
   assertEquals(await spark.getRetrieval(), retrieval)
 })
 
+// TODO: test more cases
 test('fetchCAR', async () => {
   const URL = 'url'
   const fetch = async url => {
