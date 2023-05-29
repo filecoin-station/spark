@@ -66,5 +66,5 @@ test('submitRetrieval', async () => {
     return { status: 200 }
   }
   const spark = new Spark({ fetch })
-  await spark.submitRetrieval({ id: 0, success: true })
+  await spark.submitRetrieval(0, { success: true })
 })
