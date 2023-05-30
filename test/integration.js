@@ -6,9 +6,10 @@ test('integration', async () => {
   for (let i = 0; i < 10; i++) {
     try {
       await spark.nextRetrieval()
-      break
+      return
     } catch (err) {
       console.error(err)
     }
   }
+  throw new Error('No retrieval succeeded')
 })
