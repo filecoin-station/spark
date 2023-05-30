@@ -14,5 +14,5 @@ $ npx standard
 $ # Run module
 $ zinnia run main.js
 $ # Test module
-$ zinnia run test/all.js
+$ zinnia run test.js
 ```
