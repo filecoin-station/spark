@@ -25,27 +25,9 @@ test('fetchCAR', async () => {
     return {
       status: 200,
       ok: true,
-      body: {
-        [Symbol.asyncIterator]: () => {
-          let i = 0
-          return {
-            async next () {
-              if (i === 0) {
-                i++
-                return {
-                  value: new Uint8Array([1, 2, 3]),
-                  done: false
-                }
-              } else {
-                return {
-                  value: undefined,
-                  done: true
-                }
-              }
-            }
-          }
-        }
-      }
+      body: (async function* () {
+        yield new Uint8Array([1, 2, 3])
+      })()
     }
   }
   const spark = new Spark({ fetch })
