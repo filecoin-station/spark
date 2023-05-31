@@ -36,12 +36,19 @@ test('fetchCAR', async () => {
     }
   }
   const spark = new Spark({ fetch })
-  const stats = await spark.fetchCAR(URL)
-  assertInstanceOf(stats.start, Date)
-  assertInstanceOf(stats.firstByte, Date)
-  assertInstanceOf(stats.end, Date)
+  const stats = {
+    startAt: new Date(),
+    firstByteAt: null,
+    endAt: null,
+    byteLength: 0,
+    statusCode: null
+  }
+  await spark.fetchCAR(URL, stats)
+  assertInstanceOf(stats.startAt, Date)
+  assertInstanceOf(stats.firstByteAt, Date)
+  assertInstanceOf(stats.endAt, Date)
   assertEquals(stats.byteLength, 3)
-  assertEquals(stats.status, 200)
+  assertEquals(stats.statusCode, 200)
   assertEquals(requests, [{ url: URL }])
 })
 

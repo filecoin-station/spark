@@ -1,6 +1,6 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assert, assertEquals } from 'zinnia:assert'
+import { assert } from 'zinnia:assert'
 
 test('integration', async () => {
   const spark = new Spark()
@@ -9,5 +9,4 @@ test('integration', async () => {
   const retrieval = await res.json()
   assert(retrieval.startAt)
   assert(retrieval.finishedAt)
-
 })
