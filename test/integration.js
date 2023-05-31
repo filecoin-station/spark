@@ -3,7 +3,7 @@ import { test } from 'zinnia:test'
 
 test('integration', async () => {
   const spark = new Spark()
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     try {
       await spark.nextRetrieval()
       return
