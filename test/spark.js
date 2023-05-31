@@ -49,10 +49,6 @@ test('submitRetrieval', async () => {
   const requests = []
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
-    assertEquals(url, 'https://spark.fly.dev/retrievals/0')
-    assertEquals(opts.method, 'PATCH')
-    assertEquals(JSON.parse(opts.body), { success: true })
-    assertEquals(opts.headers['Content-Type'], 'application/json')
     return { status: 200 }
   }
   const spark = new Spark({ fetch })
@@ -62,7 +58,10 @@ test('submitRetrieval', async () => {
       url: 'https://spark.fly.dev/retrievals/0',
       opts: {
         method: 'PATCH',
-        body: JSON.stringify({ success: true }),
+        body: JSON.stringify({
+          success: true,
+          walletAddress: Zinnia.walletAddress
+        }),
         headers: { 'Content-Type': 'application/json' }
       }
     }
