@@ -1,3 +1,5 @@
+/* global Zinnia */
+
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals } from 'zinnia:assert'
