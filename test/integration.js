@@ -1,7 +1,13 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
+import { assert, assertEquals } from 'zinnia:assert'
 
 test('integration', async () => {
   const spark = new Spark()
-  await spark.nextRetrieval()
+  const id = await spark.nextRetrieval()
+  const res = await fetch(`https://spark.fly.dev/retrievals/${id}`)
+  const retrieval = await res.json()
+  assert(retrieval.startAt)
+  assert(retrieval.finishedAt)
+
 })
