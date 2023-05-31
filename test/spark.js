@@ -25,7 +25,7 @@ test('fetchCAR', async () => {
     return {
       status: 200,
       ok: true,
-      body: (async function* () {
+      body: (async function * () {
         yield new Uint8Array([1, 2, 3])
       })()
     }
