@@ -23,7 +23,10 @@ test('getRetrieval', async () => {
     opts: {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sparkVersion: SPARK_VERSION })
+      body: JSON.stringify({
+        sparkVersion: SPARK_VERSION,
+        zinniaVersion: Zinnia.versions.zinnia
+      })
     }
   }])
 })
