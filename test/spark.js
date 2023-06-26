@@ -3,6 +3,7 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals } from 'zinnia:assert'
+import { SPARK_VERSION } from '../lib/constants.js'
 
 test('getRetrieval', async () => {
   const retrieval = { retrieval: 'retrieval' }
@@ -19,7 +20,14 @@ test('getRetrieval', async () => {
   assertEquals(await spark.getRetrieval(), retrieval)
   assertEquals(requests, [{
     url: 'https://spark.fly.dev/retrievals',
-    opts: { method: 'POST' }
+    opts: {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sparkVersion: SPARK_VERSION,
+        zinniaVersion: Zinnia.versions.zinnia
+      })
+    }
   }])
 })
 
