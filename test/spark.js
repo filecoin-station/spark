@@ -11,6 +11,8 @@ test('getRetrieval', async () => {
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
     return {
+      status: 200,
+      ok: true,
       async json () {
         return retrieval
       }
@@ -68,7 +70,7 @@ test('submitRetrieval', async () => {
   const requests = []
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
-    return { status: 200 }
+    return { status: 200, ok: true }
   }
   const spark = new Spark({ fetch })
   await spark.submitRetrieval(0, { success: true })
