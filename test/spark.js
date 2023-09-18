@@ -70,16 +70,19 @@ test('submitRetrieval', async () => {
   const requests = []
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
-    return { status: 200, ok: true }
+    return { status: 200, ok: true, async json () { return { id: 123 } } }
   }
   const spark = new Spark({ fetch })
-  await spark.submitRetrieval(0, { success: true })
+  await spark.submitMeasurement({ cid: 'bafytest' }, { success: true })
   assertEquals(requests, [
     {
-      url: 'https://spark.fly.dev/retrievals/0',
+      url: 'https://spark.fly.dev/measurements',
       opts: {
-        method: 'PATCH',
+        method: 'POST',
         body: JSON.stringify({
+          sparkVersion: SPARK_VERSION,
+          zinniaVersion: Zinnia.versions.zinnia,
+          cid: 'bafytest',
           success: true,
           walletAddress: Zinnia.walletAddress
         }),
