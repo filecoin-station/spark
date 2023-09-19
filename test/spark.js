@@ -2,11 +2,25 @@
 
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assertInstanceOf, assertEquals } from 'zinnia:assert'
+import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
 test('getRetrieval', async () => {
-  const retrieval = { retrieval: 'retrieval' }
+  const round = {
+    roundId: '123',
+    retrievalTasks: [
+      {
+        cid: 'bafkreidysaugf7iuvemebpzwxxas5rctbyiryykagup2ygkojmx7ag64gy',
+        providerAddress: '/ip4/38.70.220.96/tcp/10201/p2p/12D3KooWSekjEqdSeHXkpQraVY2STL885svgmh6r2zEFHQKeJ3KD',
+        protocol: 'graphsync'
+      },
+      {
+        cid: 'QmUMpWycKJ7GUDJp9GBRX4qWUFUePUmHzri9Tm1CQHEzbJ',
+        providerAddress: '/dns4/elastic.dag.house/tcp/443/wss/p2p/QmQzqxhK82kAmKvARFZSkUVS6fo9sySaiogAnx5EnZ6ZmC',
+        protocol: 'bitswap'
+      }
+    ]
+  }
   const requests = []
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
@@ -14,21 +28,18 @@ test('getRetrieval', async () => {
       status: 200,
       ok: true,
       async json () {
-        return retrieval
+        return round
       }
     }
   }
   const spark = new Spark({ fetch })
-  assertEquals(await spark.getRetrieval(), retrieval)
+  const retrieval = await spark.getRetrieval()
+  assertArrayIncludes(round.retrievalTasks, [retrieval])
   assertEquals(requests, [{
-    url: 'https://spark.fly.dev/retrievals',
+    url: 'https://spark.fly.dev/rounds/current',
     opts: {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sparkVersion: SPARK_VERSION,
-        zinniaVersion: Zinnia.versions.zinnia
-      })
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
     }
   }])
 })
@@ -70,16 +81,19 @@ test('submitRetrieval', async () => {
   const requests = []
   const fetch = async (url, opts) => {
     requests.push({ url, opts })
-    return { status: 200, ok: true }
+    return { status: 200, ok: true, async json () { return { id: 123 } } }
   }
   const spark = new Spark({ fetch })
-  await spark.submitRetrieval(0, { success: true })
+  await spark.submitMeasurement({ cid: 'bafytest' }, { success: true })
   assertEquals(requests, [
     {
-      url: 'https://spark.fly.dev/retrievals/0',
+      url: 'https://spark.fly.dev/measurements',
       opts: {
-        method: 'PATCH',
+        method: 'POST',
         body: JSON.stringify({
+          sparkVersion: SPARK_VERSION,
+          zinniaVersion: Zinnia.versions.zinnia,
+          cid: 'bafytest',
           success: true,
           walletAddress: Zinnia.walletAddress
         }),

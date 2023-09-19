@@ -4,8 +4,8 @@ import { assert } from 'zinnia:assert'
 
 test('integration', async () => {
   const spark = new Spark()
-  const id = await spark.nextRetrieval()
-  const res = await fetch(`https://spark.fly.dev/retrievals/${id}`)
+  const measurementId = await spark.nextRetrieval()
+  const res = await fetch(`https://spark.fly.dev/measurements/${measurementId}`)
   assert(res.ok)
   const retrieval = await res.json()
   assert(retrieval.startAt)
