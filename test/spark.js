@@ -95,7 +95,7 @@ test('submitRetrieval', async () => {
           zinniaVersion: Zinnia.versions.zinnia,
           cid: 'bafytest',
           success: true,
-          walletAddress: Zinnia.walletAddress
+          participantAddress: Zinnia.walletAddress
         }),
         headers: { 'Content-Type': 'application/json' }
       }
