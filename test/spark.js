@@ -66,6 +66,7 @@ test('fetchCAR', async () => {
     endAt: null,
     carTooLarge: false,
     byteLength: 0,
+    carChecksum: null,
     statusCode: null
   }
   await spark.fetchCAR(URL, stats)
@@ -75,6 +76,7 @@ test('fetchCAR', async () => {
   assertInstanceOf(stats.endAt, Date)
   assertEquals(stats.carTooLarge, false)
   assertEquals(stats.byteLength, 3)
+  assertEquals(stats.carChecksum, '1220039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81')
   assertEquals(stats.statusCode, 200)
   assertEquals(requests, [{ url: URL }])
 })
