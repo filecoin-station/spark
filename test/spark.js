@@ -64,6 +64,7 @@ test('fetchCAR', async () => {
     startAt: new Date(),
     firstByteAt: null,
     endAt: null,
+    carTooLarge: false,
     byteLength: 0,
     statusCode: null
   }
@@ -72,6 +73,7 @@ test('fetchCAR', async () => {
   assertInstanceOf(stats.startAt, Date)
   assertInstanceOf(stats.firstByteAt, Date)
   assertInstanceOf(stats.endAt, Date)
+  assertEquals(stats.carTooLarge, false)
   assertEquals(stats.byteLength, 3)
   assertEquals(stats.statusCode, 200)
   assertEquals(requests, [{ url: URL }])
