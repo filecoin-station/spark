@@ -3,7 +3,7 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
-import { SPARK_VERSION } from '../lib/constants.js'
+import { SPARK_VERSION, MAX_CAR_SIZE } from '../lib/constants.js'
 
 test('getRetrieval', async () => {
   const round = {
@@ -64,7 +64,9 @@ test('fetchCAR', async () => {
     startAt: new Date(),
     firstByteAt: null,
     endAt: null,
+    carTooLarge: false,
     byteLength: 0,
+    carChecksum: null,
     statusCode: null
   }
   await spark.fetchCAR(URL, stats)
@@ -72,9 +74,40 @@ test('fetchCAR', async () => {
   assertInstanceOf(stats.startAt, Date)
   assertInstanceOf(stats.firstByteAt, Date)
   assertInstanceOf(stats.endAt, Date)
+  assertEquals(stats.carTooLarge, false)
   assertEquals(stats.byteLength, 3)
+  assertEquals(stats.carChecksum, '1220039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81')
   assertEquals(stats.statusCode, 200)
   assertEquals(requests, [{ url: URL }])
+})
+
+test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
+  const URL = 'url'
+  const fetch = async url => {
+    return {
+      status: 200,
+      ok: true,
+      body: (async function * () {
+        const data = new Uint8Array(MAX_CAR_SIZE + 1)
+        data.fill(11, 0, -1)
+        yield data
+      })()
+    }
+  }
+  const spark = new Spark({ fetch })
+  const stats = {
+    timeout: false,
+    carTooLarge: false,
+    byteLength: 0,
+    carChecksum: null,
+    statusCode: null
+  }
+  await spark.fetchCAR(URL, stats)
+  assertEquals(stats.timeout, false)
+  assertEquals(stats.carTooLarge, true)
+  assertEquals(stats.byteLength, MAX_CAR_SIZE + 1)
+  assertEquals(stats.carChecksum, null)
+  assertEquals(stats.statusCode, 200)
 })
 
 test('submitRetrieval', async () => {
@@ -84,7 +117,7 @@ test('submitRetrieval', async () => {
     return { status: 200, ok: true, async json () { return { id: 123 } } }
   }
   const spark = new Spark({ fetch })
-  await spark.submitMeasurement({ cid: 'bafytest' }, { success: true })
+  await spark.submitMeasurement({ cid: 'bafytest' }, {})
   assertEquals(requests, [
     {
       url: 'https://spark.fly.dev/measurements',
@@ -94,7 +127,6 @@ test('submitRetrieval', async () => {
           sparkVersion: SPARK_VERSION,
           zinniaVersion: Zinnia.versions.zinnia,
           cid: 'bafytest',
-          success: true,
           participantAddress: Zinnia.walletAddress
         }),
         headers: { 'Content-Type': 'application/json' }
