@@ -36,7 +36,7 @@ test('getRetrieval', async () => {
   const retrieval = await spark.getRetrieval()
   assertArrayIncludes(round.retrievalTasks, [retrieval])
   assertEquals(requests, [{
-    url: 'https://spark.fly.dev/rounds/current',
+    url: 'https://api.filspark.com/rounds/current',
     opts: {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -120,7 +120,7 @@ test('submitRetrieval', async () => {
   await spark.submitMeasurement({ cid: 'bafytest' }, {})
   assertEquals(requests, [
     {
-      url: 'https://spark.fly.dev/measurements',
+      url: 'https://api.filspark.com/measurements',
       opts: {
         method: 'POST',
         body: JSON.stringify({
