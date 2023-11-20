@@ -22,7 +22,8 @@ test('getRetrieval', async () => {
     ]
   }
   const requests = []
-  const fetch = async (url, opts) => {
+  const fetch = async (url, allOpts) => {
+    const {signal, ...opts} = allOpts
     requests.push({ url, opts })
     return {
       status: 200,
@@ -112,7 +113,8 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
 
 test('submitRetrieval', async () => {
   const requests = []
-  const fetch = async (url, opts) => {
+  const fetch = async (url, allOpts) => {
+    const {signal, ...opts} = allOpts
     requests.push({ url, opts })
     return { status: 200, ok: true, async json () { return { id: 123 } } }
   }
