@@ -82,6 +82,7 @@ test('fetchCAR', async () => {
   assertEquals(requests, [{ url: URL }])
 })
 
+/* Disabled as long as we are fetching the top-level block only
 test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
   const URL = 'url'
   const fetch = async url => {
@@ -110,6 +111,7 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
   assertEquals(stats.carChecksum, null)
   assertEquals(stats.statusCode, 200)
 })
+*/
 
 test('submitRetrieval', async () => {
   const requests = []
