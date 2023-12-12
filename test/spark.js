@@ -3,7 +3,7 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
-import { SPARK_VERSION, MAX_CAR_SIZE } from '../lib/constants.js'
+import { SPARK_VERSION } from '../lib/constants.js'
 
 test('getRetrieval', async () => {
   const round = {
