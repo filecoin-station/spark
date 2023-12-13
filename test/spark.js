@@ -3,7 +3,7 @@
 import Spark from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
-import { SPARK_VERSION, MAX_CAR_SIZE } from '../lib/constants.js'
+import { SPARK_VERSION } from '../lib/constants.js'
 
 test('getRetrieval', async () => {
   const round = {
@@ -82,6 +82,7 @@ test('fetchCAR', async () => {
   assertEquals(requests, [{ url: URL }])
 })
 
+/* Disabled as long as we are fetching the top-level block only
 test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
   const URL = 'url'
   const fetch = async url => {
@@ -110,6 +111,7 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
   assertEquals(stats.carChecksum, null)
   assertEquals(stats.statusCode, 200)
 })
+*/
 
 test('submitRetrieval', async () => {
   const requests = []
