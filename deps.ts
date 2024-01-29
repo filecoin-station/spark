@@ -5,4 +5,5 @@
 //
 
 export { encodeHex } from 'https://deno.land/std@0.203.0/encoding/hex.ts'
+export { decodeBase64 } from 'https://deno.land/std@0.203.0/encoding/base64.ts'
 export { decode as decodeVarint } from 'https://deno.land/x/varint@v2.0.0/varint.ts'

@@ -36,6 +36,15 @@ function encodeHex(src) {
     }
     return textDecoder.decode(dst);
 }
+function decodeBase64(b64) {
+    const binString = atob(b64);
+    const size = binString.length;
+    const bytes = new Uint8Array(size);
+    for(let i = 0; i < size; i++){
+        bytes[i] = binString.charCodeAt(i);
+    }
+    return bytes;
+}
 const MaxUInt64 = 18446744073709551615n;
 const REST = 0x7f;
 const SHIFT = 7;
@@ -54,4 +63,5 @@ function decode(buf, offset = 0) {
     throw new RangeError("malformed or overflow varint");
 }
 export { encodeHex as encodeHex };
+export { decodeBase64 as decodeBase64 };
 export { decode as decodeVarint };
