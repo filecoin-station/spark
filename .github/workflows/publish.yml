@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: curl -L https://api.github.com/repos/${{ github.repository }}/tarball/${{ github.sha }} > source.tar.gz
+      - run: curl -L ${{ github.event.release.tarball_url }} > source.tar.gz
       - uses: filecoin-station/publish-zinnia-module-action@v0
         with:
           source: source.tar.gz
