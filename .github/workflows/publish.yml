@@ -1,0 +1,17 @@
+name: Publish
+on:
+  release:
+    types: [released]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: curl -L ${{ github.event.release.tarball_url }} > source.tar.gz
+      - uses: filecoin-station/publish-zinnia-module-action@v0
+        with:
+          source: source.tar.gz
+          w3up-private-key: ${{ secrets.W3UP_PRIVATE_KEY }}
+          w3up-proof: ${{ secrets.W3UP_PROOF }}
+          w3name-private-key: ${{ secrets.W3NAME_PRIVATE_KEY }}
+          w3name-revision: ${{ secrets.W3NAME_REVISION }}
