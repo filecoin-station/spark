@@ -24,8 +24,7 @@ test('retrieval check for our CID', async () => {
   const assertProp = (prop, expectedValue) => assertEquals(m[prop], expectedValue, prop)
 
   assertProp('cid', KNOWN_CID)
-  // TODO - spark-api does not record this field yet
-  // assertProp('indexerResult', 'OK')
+  assertProp('indexerResult', 'OK')
   assertProp('providerAddress', '/dns/frisbii.fly.dev/tcp/443/https')
   assertProp('protocol', 'http')
   assertProp('timeout', false)
