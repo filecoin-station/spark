@@ -16,6 +16,6 @@ test('lookup peer id of a miner that does not exist', async () => {
       `Expected "lookupMinerPeerId()" to fail, but it resolved with "${result}" instead.`
     )
   } catch (err) {
-    assertMatch(err.toString(), /actor code is not miner/)
+    assertMatch(err.toString(), /\bf010\b.*\bactor code is not miner/)
   }
 })
