@@ -1,8 +1,11 @@
 import Spark from '../lib/spark.js'
-import { test } from 'zinnia:test'
+
 import { assert, assertEquals } from 'zinnia:assert'
+import { test } from 'zinnia:test'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
+const OUR_FAKE_MINER_ID = 'f01spark'
+const FRISBEE_PEER_ID = '12D3KooWN3zbfCjLrjBB7uxYThRTCFM9nxinjb5j9fYFZ6P5RUfP'
 
 test('integration', async () => {
   const spark = new Spark()
@@ -16,7 +19,11 @@ test('integration', async () => {
 
 test('retrieval check for our CID', async () => {
   const spark = new Spark()
-  spark.getRetrieval = async () => ({ cid: KNOWN_CID })
+  spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
+  spark.lookupMinerPeerId = async (minerId) => {
+    assertEquals(minerId, OUR_FAKE_MINER_ID)
+    return FRISBEE_PEER_ID
+  }
   const measurementId = await spark.nextRetrieval()
   const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)
   assert(res.ok)
@@ -24,8 +31,9 @@ test('retrieval check for our CID', async () => {
   const assertProp = (prop, expectedValue) => assertEquals(m[prop], expectedValue, prop)
 
   assertProp('cid', KNOWN_CID)
-  // TODO - spark-api does not record this field yet
-  // assertProp('indexerResult', 'OK')
+  assertProp('minerId', OUR_FAKE_MINER_ID)
+  assertProp('providerId', FRISBEE_PEER_ID)
+  assertProp('indexerResult', 'OK')
   assertProp('providerAddress', '/dns/frisbii.fly.dev/tcp/443/https')
   assertProp('protocol', 'http')
   assertProp('timeout', false)
