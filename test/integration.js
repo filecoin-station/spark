@@ -18,12 +18,13 @@ test('integration', async () => {
 })
 
 test('retrieval check for our CID', async () => {
-  const spark = new Spark()
-  spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
-  spark.getMinerPeerId = async (minerId) => {
+  const getMinerPeerId = async (minerId) => {
     assertEquals(minerId, OUR_FAKE_MINER_ID)
     return FRISBEE_PEER_ID
   }
+  const spark = new Spark({ getMinerPeerId })
+  spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
+
   const measurementId = await spark.nextRetrieval()
   const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)
   assert(res.ok)
