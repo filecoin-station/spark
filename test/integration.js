@@ -20,7 +20,7 @@ test('integration', async () => {
 test('retrieval check for our CID', async () => {
   const spark = new Spark()
   spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
-  spark.lookupMinerPeerId = async (minerId) => {
+  spark.getMinerPeerId = async (minerId) => {
     assertEquals(minerId, OUR_FAKE_MINER_ID)
     return FRISBEE_PEER_ID
   }
