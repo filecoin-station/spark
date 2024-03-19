@@ -18,8 +18,9 @@ test('integration', async () => {
 })
 
 test('retrieval check for our CID', async () => {
+  const minersChecked = []
   const getMinerPeerId = async (minerId) => {
-    assertEquals(minerId, OUR_FAKE_MINER_ID)
+    minersChecked.push(minerId)
     return FRISBEE_PEER_ID
   }
   const spark = new Spark({ getMinerPeerId })
@@ -30,6 +31,8 @@ test('retrieval check for our CID', async () => {
   assert(res.ok)
   const m = await res.json()
   const assertProp = (prop, expectedValue) => assertEquals(m[prop], expectedValue, prop)
+
+  assertEquals(minersChecked, [OUR_FAKE_MINER_ID])
 
   assertProp('cid', KNOWN_CID)
   assertProp('minerId', OUR_FAKE_MINER_ID)
