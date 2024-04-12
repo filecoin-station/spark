@@ -131,7 +131,8 @@ test('submitRetrieval', async () => {
           sparkVersion: SPARK_VERSION,
           zinniaVersion: Zinnia.versions.zinnia,
           cid: 'bafytest',
-          participantAddress: Zinnia.walletAddress
+          participantAddress: Zinnia.walletAddress,
+          stationId: Zinnia.stationId
         }),
         headers: { 'Content-Type': 'application/json' }
       }
