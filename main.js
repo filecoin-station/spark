@@ -1,3 +1,5 @@
+/* global Zinnia */
+
 import Spark from './lib/spark.js'
 
 if (!Zinnia.stationId) {
