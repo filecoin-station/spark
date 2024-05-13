@@ -4,8 +4,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: curl -L https://github.com/filecoin-station/zinnia/releases/download/v0.18.3/zinnia-linux-x64.tar.gz | tar -xz
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
       - run: npx standard
       - run: ./zinnia run test.js
