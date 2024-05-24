@@ -47,3 +47,7 @@ test('retrieval check for our CID', async () => {
   // TODO - spark-api does not record this field yet
   // assertProp('carChecksum', '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136')
 })
+
+test('can execute manual check for our CID', async () => {
+  await import('../manual-check.js')
+})
