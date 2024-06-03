@@ -13,3 +13,4 @@ const minerId = 'f010479'
 const spark = new Spark()
 const stats = { cid, minerId, indexerResult: null, statusCode: null, byteLength: 0 }
 await spark.executeRetrievalCheck({ cid, minerId }, stats)
+console.log('Measurement: %o', stats)
