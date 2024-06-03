@@ -11,5 +11,5 @@ const minerId = 'f010479'
 
 // Run the check
 const spark = new Spark()
-const stats = {}
+const stats = { cid, minerId, indexerResult: null, statusCode: null, byteLength: 0 }
 await spark.executeRetrievalCheck({ cid, minerId }, stats)
