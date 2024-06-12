@@ -19,16 +19,15 @@ $ zinnia run test.js
 
 ## Release
 
-On a clean working tree, first bump semver `SPARK_VERSION` in `lib/constants.js`.
-Then, replacing `$SPARK_VERSION` with the new `SPARK_VERSION`:
+On a clean working tree, run the following command:
 
 ```bash
-$ git add .
-$ git commit -m v$SPARK_VERSION
-$ git tag -s v$SPARK_VERSION -m v$SPARK_VERSION
-$ git push
-$ git push origin v$SPARK_VERSION 
+$ ./release.sh <semver>
+$ # Example
+$ ./release.sh 1.0.0
 ```
 
-Go to GitHub releases and create a new release for the tag you just created.
-Use GitHub's changelog feature to fill out the release message.
+Use GitHub's changelog feature to fill out the release notes.
+
+Publish the new release and let the CI/CD workflow upload the sources
+to IPFS & IPNS.
