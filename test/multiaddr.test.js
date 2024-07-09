@@ -1,6 +1,6 @@
 import { test } from 'zinnia:test'
 import { assertEquals, assertThrows } from 'zinnia:assert'
-import { multiaddrToHttpUri } from '../lib/multiaddr.js'
+import { multiaddrToHttpUrl } from '../lib/multiaddr.js'
 
 const HAPPY_CASES = [
   ['/ip4/127.0.0.1/tcp/80/http', 'http://127.0.0.1'],
@@ -14,7 +14,7 @@ const HAPPY_CASES = [
 
 for (const [multiaddr, expectedUri] of HAPPY_CASES) {
   test(`parse ${multiaddr}`, () => {
-    const uri = multiaddrToHttpUri(multiaddr)
+    const uri = multiaddrToHttpUrl(multiaddr)
     assertEquals(uri, expectedUri)
   })
 }
@@ -27,7 +27,7 @@ const ERROR_CASES = [
 
 for (const [multiaddr, expectedError] of ERROR_CASES) {
   test(`parse ${multiaddr}`, () => {
-    const err = assertThrows(() => multiaddrToHttpUri(multiaddr))
+    const err = assertThrows(() => multiaddrToHttpUrl(multiaddr))
     assertEquals(err.message, expectedError)
   })
 }
