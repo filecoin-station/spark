@@ -70,7 +70,7 @@ test('fetchCAR', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR(URL, stats)
+  await spark.fetchCAR('http', '127.0.0.1', 'bafy', stats)
   assertEquals(stats.timeout, false)
   assertInstanceOf(stats.startAt, Date)
   assertInstanceOf(stats.firstByteAt, Date)
@@ -104,7 +104,7 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR(URL, stats)
+  await spark.fetchCAR('http', '127.0.0.1', 'bafy', stats)
   assertEquals(stats.timeout, false)
   assertEquals(stats.carTooLarge, true)
   assertEquals(stats.byteLength, MAX_CAR_SIZE + 1)
