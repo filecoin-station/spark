@@ -3,7 +3,7 @@ import { assertEquals } from 'zinnia:assert'
 import { queryTheIndex } from '../lib/ipni-client.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
-const FRISBEE_PEER_ID = '12D3KooWN3zbfCjLrjBB7uxYThRTCFM9nxinjb5j9fYFZ6P5RUfP'
+const FRISBEE_PEER_ID = '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
 
 test('query advertised CID', async () => {
   const result = await queryTheIndex(KNOWN_CID, FRISBEE_PEER_ID)
