@@ -5,6 +5,8 @@ import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
+const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
+
 test('getRetrieval', async () => {
   const round = {
     roundId: '123',
@@ -47,19 +49,12 @@ test('getRetrieval', async () => {
 
 // TODO: test more cases
 test('fetchCAR', async () => {
-  const URL = 'url'
   const requests = []
-  const fetch = async url => {
-    requests.push({ url })
-    return {
-      status: 200,
-      ok: true,
-      body: (async function * () {
-        yield new Uint8Array([1, 2, 3])
-      })()
-    }
+  const mockedFetch = async url => {
+    requests.push(url.toString())
+    return fetch(`https://frisbii.fly.dev/ipfs/${KNOWN_CID}`)
   }
-  const spark = new Spark({ fetch })
+  const spark = new Spark({ fetch: mockedFetch })
   const stats = {
     timeout: false,
     startAt: new Date(),
@@ -70,16 +65,16 @@ test('fetchCAR', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR('http', '127.0.0.1', 'bafy', stats)
-  assertEquals(stats.timeout, false)
+  await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/80/http', KNOWN_CID, stats)
+  assertEquals(stats.timeout, false, 'stats.timeout')
   assertInstanceOf(stats.startAt, Date)
   assertInstanceOf(stats.firstByteAt, Date)
   assertInstanceOf(stats.endAt, Date)
-  assertEquals(stats.carTooLarge, false)
-  assertEquals(stats.byteLength, 3)
-  assertEquals(stats.carChecksum, '1220039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81')
-  assertEquals(stats.statusCode, 200)
-  assertEquals(requests, [{ url: URL }])
+  assertEquals(stats.carTooLarge, false, 'stats.carTooLarge')
+  assertEquals(stats.byteLength, 200, 'stats.byteLength')
+  assertEquals(stats.carChecksum, '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136', 'stats.carChecksum')
+  assertEquals(stats.statusCode, 200, 'stats.statusCode')
+  assertEquals(requests, [`http://127.0.0.1/ipfs/${KNOWN_CID}?dag-scope=block`])
 })
 
 /* Disabled as long as we are fetching the top-level block only
@@ -104,7 +99,7 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR('http', '127.0.0.1', 'bafy', stats)
+  await spark.fetchCAR('http', '/ipv4/127.0.0.1/tcp/80/http', 'bafy', stats)
   assertEquals(stats.timeout, false)
   assertEquals(stats.carTooLarge, true)
   assertEquals(stats.byteLength, MAX_CAR_SIZE + 1)
