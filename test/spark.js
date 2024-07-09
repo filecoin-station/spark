@@ -52,7 +52,7 @@ test('fetchCAR', async () => {
   const requests = []
   const mockedFetch = async url => {
     requests.push(url.toString())
-    return fetch(`https://frisbii.fly.dev/ipfs/${KNOWN_CID}`)
+    return fetch(url)
   }
   const spark = new Spark({ fetch: mockedFetch })
   const stats = {
@@ -65,7 +65,8 @@ test('fetchCAR', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/80/http', KNOWN_CID, stats)
+  await spark.fetchCAR('http', '/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  assertEquals(stats.statusCode, 200, 'stats.statusCode')
   assertEquals(stats.timeout, false, 'stats.timeout')
   assertInstanceOf(stats.startAt, Date)
   assertInstanceOf(stats.firstByteAt, Date)
@@ -73,13 +74,11 @@ test('fetchCAR', async () => {
   assertEquals(stats.carTooLarge, false, 'stats.carTooLarge')
   assertEquals(stats.byteLength, 200, 'stats.byteLength')
   assertEquals(stats.carChecksum, '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136', 'stats.carChecksum')
-  assertEquals(stats.statusCode, 200, 'stats.statusCode')
-  assertEquals(requests, [`http://127.0.0.1/ipfs/${KNOWN_CID}?dag-scope=block`])
+  assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
 })
 
 /* Disabled as long as we are fetching the top-level block only
 test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
-  const URL = 'url'
   const fetch = async url => {
     return {
       status: 200,
@@ -99,7 +98,7 @@ test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
     carChecksum: null,
     statusCode: null
   }
-  await spark.fetchCAR('http', '/ipv4/127.0.0.1/tcp/80/http', 'bafy', stats)
+  await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/80/http', 'bafy', stats)
   assertEquals(stats.timeout, false)
   assertEquals(stats.carTooLarge, true)
   assertEquals(stats.byteLength, MAX_CAR_SIZE + 1)
