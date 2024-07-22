@@ -1,6 +1,6 @@
 import { test } from 'zinnia:test'
 import { assertEquals } from 'zinnia:assert'
-import { getRandomnessForSparkRound  } from '../lib/drand-client.js'
+import { getRandomnessForSparkRound } from '../lib/drand-client.js'
 
 test('getRandomnessForSparkRound', async () => {
   const randomness = await getRandomnessForSparkRound(4111111)

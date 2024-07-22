@@ -10,16 +10,16 @@ const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
 test('getRetrieval', async () => {
   const round = {
     roundId: '123',
+    startEpoch: 4111111,
+    maxTasksPerNode: 1,
     retrievalTasks: [
       {
         cid: 'bafkreidysaugf7iuvemebpzwxxas5rctbyiryykagup2ygkojmx7ag64gy',
-        providerAddress: '/ip4/38.70.220.96/tcp/10201/p2p/12D3KooWSekjEqdSeHXkpQraVY2STL885svgmh6r2zEFHQKeJ3KD',
-        protocol: 'graphsync'
+        minerId: 'f010'
       },
       {
         cid: 'QmUMpWycKJ7GUDJp9GBRX4qWUFUePUmHzri9Tm1CQHEzbJ',
-        providerAddress: '/dns4/elastic.dag.house/tcp/443/wss/p2p/QmQzqxhK82kAmKvARFZSkUVS6fo9sySaiogAnx5EnZ6ZmC',
-        protocol: 'bitswap'
+        minerId: 'f020'
       }
     ]
   }
@@ -27,6 +27,16 @@ test('getRetrieval', async () => {
   const fetch = async (url, allOpts) => {
     const { signal, ...opts } = allOpts
     requests.push({ url, opts })
+    if (url === 'https://api.filspark.com/rounds/current') {
+      const headers = new Headers()
+      headers.set('location', '/rounds/meridian/0x84607/115')
+      return {
+        status: 302,
+        ok: false,
+        headers
+      }
+    }
+
     return {
       status: 200,
       ok: true,
@@ -37,14 +47,26 @@ test('getRetrieval', async () => {
   }
   const spark = new Spark({ fetch })
   const retrieval = await spark.getRetrieval()
-  assertArrayIncludes(round.retrievalTasks, [retrieval])
-  assertEquals(requests, [{
-    url: 'https://api.filspark.com/rounds/current',
-    opts: {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+  assertArrayIncludes(round.retrievalTasks.map(JSON.stringify), [retrieval].map(JSON.stringify))
+  assertEquals(requests, [
+    {
+      url: 'https://api.filspark.com/rounds/current',
+      opts: {
+        method: 'GET',
+        redirect: 'manual',
+        headers: { 'Content-Type': 'application/json' }
+      }
+    },
+    {
+      url: 'https://api.filspark.com/rounds/meridian/0x84607/115',
+      opts: {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      }
     }
-  }])
+  ])
 })
 
 test('fetchCAR - http', async () => {
