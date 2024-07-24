@@ -15,3 +15,10 @@ export {
   HashMismatchError,
   validateBlock
 } from 'https://cdn.skypack.dev/@web3-storage/car-block-validator@1.2.0/?dts'
+// cdn.skypack.dev cannot resolve import from @noble/hashes
+// jsdelivr.net seems to work better, it's also recommended by drand-client
+export {
+  fetchBeaconByTime,
+  HttpChainClient,
+  HttpCachingChain
+} from 'https://cdn.jsdelivr.net/npm/drand-client@1.2.6/index.js/+esm'
