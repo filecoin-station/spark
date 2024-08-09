@@ -23,7 +23,8 @@ if (stats.providerAddress && stats.statusCode !== 200) {
       console.log(
         '  lassie fetch -o /dev/null -vv --dag-scope block --protocols graphsync --providers %s %s',
         JSON.stringify(stats.providerAddress),
-        cid)
+        cid
+      )
       console.log('\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation')
       break
     case 'http':
