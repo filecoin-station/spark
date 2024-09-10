@@ -4,13 +4,19 @@
 //
 
 import Spark, { getRetrievalUrl } from './lib/spark.js'
+import { getMinerPeerId as defaultGetMinerPeerId } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
-const cid = 'bafybeiepi56qxfcwqgpstg25r6sonig7y3pzd37lwambzmlcmbnujjri4a'
-const minerId = 'f010479'
+const cid = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
+const minerId = 'f0frisbii'
+
+const getMinerPeerId = (minerId) =>
+  minerId === 'f0frisbii'
+    ? '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
+    : defaultGetMinerPeerId(minerId)
 
 // Run the check
-const spark = new Spark()
+const spark = new Spark({getMinerPeerId})
 const stats = { cid, minerId, indexerResult: null, statusCode: null, byteLength: 0 }
 await spark.executeRetrievalCheck({ cid, minerId }, stats)
 console.log('Measurement: %o', stats)
