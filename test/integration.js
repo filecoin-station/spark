@@ -13,7 +13,7 @@ test('integration', async () => {
   const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)
   assert(res.ok)
   const retrieval = await res.json()
-  assert(retrieval.startAt)
+  assert(retrieval.indexerResult)
   assert(retrieval.finishedAt)
 })
 
