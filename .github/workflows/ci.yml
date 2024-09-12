@@ -10,7 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - run: curl -L https://github.com/filecoin-station/zinnia/releases/download/${{ env.ZINNIA_VERSION }}/zinnia-linux-x64.tar.gz | tar -xz
       - uses: actions/setup-node@v4
-      - run: npx standard
+      # Disabled to avoid https://github.com/standard/standard/issues/1976
+      # - run: npx standard
       - run: ./zinnia run test.js
 
   test-windows:
