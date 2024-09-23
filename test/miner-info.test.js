@@ -11,7 +11,7 @@ test('get peer id of a known miner', async () => {
 
 test('get peer id of a miner that does not exist', async () => {
   try {
-    const result = await getMinerPeerId('f010')
+    const result = await getMinerPeerId('f010', { maxAttempts: 1 })
     throw new AssertionError(
       `Expected "getMinerPeerId()" to fail, but it resolved with "${result}" instead.`
     )
