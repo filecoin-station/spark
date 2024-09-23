@@ -62,6 +62,57 @@ function decode(buf, offset = 0) {
     }
     throw new RangeError("malformed or overflow varint");
 }
+class AssertionError extends Error {
+    name = "AssertionError";
+    constructor(message){
+        super(message);
+    }
+}
+function assert(expr, msg = "") {
+    if (!expr) {
+        throw new AssertionError(msg);
+    }
+}
+class RetryError extends Error {
+    constructor(cause, attempts){
+        super(`Retrying exceeded the maxAttempts (${attempts}).`);
+        this.name = "RetryError";
+        this.cause = cause;
+    }
+}
+const defaultRetryOptions = {
+    multiplier: 2,
+    maxTimeout: 60000,
+    maxAttempts: 5,
+    minTimeout: 1000,
+    jitter: 1
+};
+async function retry(fn, opts) {
+    const options = {
+        ...defaultRetryOptions,
+        ...opts
+    };
+    assert(options.maxTimeout >= 0, "maxTimeout is less than 0");
+    assert(options.minTimeout <= options.maxTimeout, "minTimeout is greater than maxTimeout");
+    assert(options.jitter <= 1, "jitter is greater than 1");
+    let attempt = 0;
+    while(true){
+        try {
+            return await fn();
+        } catch (error) {
+            if (attempt + 1 >= options.maxAttempts) {
+                throw new RetryError(error, options.maxAttempts);
+            }
+            const timeout = _exponentialBackoffWithJitter(options.maxTimeout, options.minTimeout, attempt, options.multiplier, options.jitter);
+            await new Promise((r)=>setTimeout(r, timeout));
+        }
+        attempt++;
+    }
+}
+function _exponentialBackoffWithJitter(cap, base, attempt, multiplier, jitter) {
+    const exp = Math.min(cap, base * multiplier ** attempt);
+    return (1 - jitter * Math.random()) * exp;
+}
 const typeofs = [
     "string",
     "number",
@@ -11692,6 +11743,7 @@ var $t = o4.FastestNodeClient, Vt = o4.HttpCachingChain, qt = o4.HttpChain, zt =
 export { encodeHex as encodeHex };
 export { decodeBase64 as decodeBase64 };
 export { decode as decodeVarint };
+export { retry as retry };
 export { CarBlockIterator as CarBlockIterator };
 export { UnsupportedHashError as UnsupportedHashError, HashMismatchError as HashMismatchError, validateBlock as validateBlock };
 export { ne1 as fetchBeaconByTime, zt as HttpChainClient, Vt as HttpCachingChain };
