@@ -1,6 +1,6 @@
 /* global Zinnia */
 
-import Spark, { newStats } from '../lib/spark.js'
+import Spark, { calculateDelayBeforeNextTask, newStats } from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
@@ -270,4 +270,34 @@ test('submitRetrieval', async () => {
       }
     }
   ])
+})
+
+test('calculateDelayBeforeNextTask() returns value based on average task duration', () => {
+  const delay = calculateDelayBeforeNextTask({
+    lastTaskDurationInMs: 3_000,
+
+    // one task every 10 seconds (on average)
+    roundLengthInMs: 60_000,
+    maxTasksPerRound: 6
+  })
+  assertEquals(delay, 7_000)
+})
+
+test('calculateDelayBeforeNextTask() handles zero tasks per round', () => {
+  const delay = calculateDelayBeforeNextTask({
+    maxTasksPerRound: 0,
+    // the values below are not important
+    roundLengthInMs: 12345,
+    lastTaskDurationInMs: 12
+  })
+  assertEquals(delay, 60_000)
+})
+
+test('calculateDelayBeforeNextTask() handles one task per round', () => {
+  const delay = calculateDelayBeforeNextTask({
+    roundLengthInMs: 20 * 60_000,
+    maxTasksPerRound: 1,
+    lastTaskDurationInMs: 1_000
+  })
+  assertEquals(delay, 60_000)
 })
