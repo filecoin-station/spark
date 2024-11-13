@@ -33,4 +33,4 @@ jobs:
               ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_SPARK_PUBLIC_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_SPARK_RELEASES_TOKEN }}
