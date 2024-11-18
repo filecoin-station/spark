@@ -9,9 +9,28 @@ jobs:
       - uses: actions/checkout@v4
       - run: curl -L ${{ github.event.release.tarball_url }} > source.tar.gz
       - uses: filecoin-station/publish-zinnia-module-action@v0
+        id: publish
         with:
           source: source.tar.gz
           w3up-private-key: ${{ secrets.W3UP_PRIVATE_KEY }}
           w3up-proof: ${{ secrets.W3UP_PROOF }}
           w3name-private-key: ${{ secrets.W3NAME_PRIVATE_KEY }}
           w3name-revision: ${{ secrets.W3NAME_REVISION }}
+      - uses: slackapi/slack-github-action@v1.27.0
+        with:
+          channel-id: spark-public
+          payload: |
+            {
+              "text": "SPARK checker version ${{ github.event.release.tag_name }} released",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<Source code|${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.release.tag_name }}> published to IPFS as <https://${{ steps.publish.outputs.cid }}.ipfs.w3s.link|${{ steps.publish.outputs.cid }}>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_SPARK_RELEASES_TOKEN }}
