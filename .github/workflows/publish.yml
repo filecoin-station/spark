@@ -27,7 +27,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<Source code|${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.release.tag_name }}> published to IPFS as <https://${{ steps.publish.outputs.cid }}.ipfs.w3s.link|${{ steps.publish.outputs.cid }}>"
+                    "text": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.release.tag_name }}|Source code> published to IPFS as <https://${{ steps.publish.outputs.cid }}.ipfs.w3s.link|${{ steps.publish.outputs.cid }}> (tar.gz)"
                   }
                 }
               ]
